@@ -2,7 +2,8 @@
 
 Python script that generates usernames based on first and last name and optionally middle name. Other options available as below.
 
-```usage: usernamegen.py [-h] [-m MIDDLENAME] [-d DELIMETERS] [-ds DOMAINSUFFIX] [-i] [-sc SUFFIXCOUNT] [-O OUTFILE] firstname lastname
+```
+usage: usernamegen.py [-h] [-m MIDDLENAME] [-d DELIMETERS] [-ds DOMAINSUFFIX] [-i] [-sc SUFFIXCOUNT] [-O OUTFILE] firstname lastname
 
 positional arguments:
   firstname             The first name to use in the gen.
