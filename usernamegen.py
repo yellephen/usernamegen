@@ -39,6 +39,8 @@ suffixCount = args.suffixcount
 outFile = args.outfile
 output=[]
 
+print("usernamegen. mooshing names.")
+
 moosh(firstName, lastName, middleName, delimeters)
 
 if includeCasing:
