@@ -75,8 +75,11 @@ def main():
 		if includeCasing:
 			output.extend(moosh(name.firstName.capitalize(),name.lastName, name.middleName, delimeters))
 			output.extend(moosh(name.firstName,name.lastName.capitalize(), name.middleName, delimeters))
+			output.extend(moosh(name.firstName,name.lastName, name.middleName.capitalize(), delimeters))
 			output.extend(moosh(name.firstName.capitalize(),name.lastName.capitalize(), name.middleName, delimeters))
 			output.extend(moosh(name.firstName.capitalize(),name.lastName, name.middleName.capitalize(), delimeters))
+			output.extend(moosh(name.firstName,name.lastName.capitalize(), name.middleName.capitalize(), delimeters))
+			output.extend(moosh(name.firstName.capitalize(),name.lastName.capitalize(), name.middleName.capitalize(), delimeters))
 
 		suffixAdditions = []
 		if suffixCount != None:
