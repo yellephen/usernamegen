@@ -1,25 +1,24 @@
 # usernamegen
 
-Python script that generates usernames based on first and last name and optionally middle name. Other options available as below.
+Python script that generates usernames based on first and last name. Other options available as below.
 
 ```
-usage: usernamegen.py [-h] [-m MIDDLENAME] [-d DELIMETERS] [-ds DOMAINSUFFIX] [-i] [-sc SUFFIXCOUNT] [-O OUTFILE] firstname lastname
+usage: usernamegen.py [-h] [-f FIRSTNAME] [-l LASTNAME] [-i INFILE] [-d DELIMETERS] [-o DOMAINSUFFIX] [-c] [-s SUFFIXCOUNT]
 
-positional arguments:
-  firstname             The first name to use in the gen.
-  lastname              The last name to use in the gen.
-
-optional arguments:
+options:
   -h, --help            show this help message and exit
-  -m MIDDLENAME, --middlename MIDDLENAME
-                        [Optional] The middle name to use in the gen.
+  -f FIRSTNAME, --firstname FIRSTNAME
+                        The first name to use in the combination.
+  -l LASTNAME, --lastname LASTNAME
+                        The last name to use in the combination.
+  -i INFILE, --infile INFILE
+                        [Optional]One entry on each line. Space delimited FirstName LastName.
   -d DELIMETERS, --delimeters DELIMETERS
-                        [Optional] Delimeters to use in the gens. Defaults to '._-'
-  -ds DOMAINSUFFIX, --domainsuffix DOMAINSUFFIX
-                        [Optional] Domain suffix to append to the end of the gens.
-  -i, --includecasing   [Optional] If specified, includes uppercase variants.
-  -sc SUFFIXCOUNT, --suffixcount SUFFIXCOUNT
-                        [Optional] If specified will append digits up to and including input.
-  -O OUTFILE, --outfile OUTFILE
-                        [optional] If present, output is written to the specified file otherwise to stdout.
+                        [Optional] Delimeters to use in the output. Defaults to '._-'
+  -o DOMAINSUFFIX, --domainsuffix DOMAINSUFFIX
+                        [Optional] Domain suffix to append to the end of the output.
+  -c, --includecasing   [Optional] If specified, includes uppercase variants.
+  -s SUFFIXCOUNT, --suffixcount SUFFIXCOUNT
+                        [Optional] If specified will append incrementing digits up to and including the specified number.
+
  ```
