@@ -2,106 +2,49 @@
 import sys
 import argparse
 
-def moosh(firstName,lastName,middleName,delimeters):
-	output=[]
-	output.append(f'{firstName}{lastName}')
-	if middleName != "":
-		output.append(f'{firstName}{middleName[0]}{lastName}')
-	for delimeter in delimeters :
-		output.append(f'{firstName[0]}{delimeter}{lastName}')
-		output.append(f'{firstName}{delimeter}{lastName[0]}')
-		if middleName != "":
-			output.append(f'{firstName}{delimeter}{middleName[0]}{delimeter}{lastName}')
-			output.append(f'{firstName}{middleName[0]}{delimeter}{lastName}')				
-	return output
+def makecombos(firstname,lastname,delimeters,domainsuffix,suffixcount):
+	delimeters = list(delimeters)
+	delimeters.insert(0,"")
+	if suffixcount == None:
+		suffixcount = ""
+	for delimeter in delimeters:
+		print(f'{firstname}{delimeter}{lastname}{suffixcount}{domainsuffix}')
+		print(f'{lastname}{delimeter}{firstname}{suffixcount}{domainsuffix}')
+		print(f'{firstname[0]}{delimeter}{lastname}{suffixcount}{domainsuffix}')
+		print(f'{lastname[0]}{delimeter}{firstname}{suffixcount}{domainsuffix}')
+		print(f'{firstname}{delimeter}{lastname[0]}{suffixcount}{domainsuffix}')
+		print(f'{lastname}{delimeter}{firstname[0]}{suffixcount}{domainsuffix}')
 
-class InputName:
-	def __init__(self, *args):
-		if len(args) == 3:
-			self.firstName = args[0]
-			self.middleName = args[1]
-			self.lastName = args[2]
-		elif len(args) == 1:
-			if len(args[0]) == 2:
-				self.firstName = args[0][0]
-				self.lastName = args[0][1]
-				self.middleName = ""
-			elif len(args[0]) == 3:
-				self.firstName = args[0][0]
-				self.middleName = args[0][1]
-				self.lastName = args[0][2]
+def makeifcasingcombos(firstname,lastname,delimeters,domainsuffix,suffixcount,includecasing):
+	makecombos(firstname,lastname,delimeters,domainsuffix,suffixcount)
+	if(includecasing):
+		makecombos(firstname.lower().capitalize(),lastname.lower(),delimeters,domainsuffix,suffixcount)
+		makecombos(firstname.lower(),lastname.lower().capitalize(),delimeters,domainsuffix,suffixcount)
+
+def do(firstname,lastname,delimeters,domainsuffix,suffixcount,includecasing):
+	makeifcasingcombos(firstname,lastname,delimeters,domainsuffix,"",includecasing)
+	if suffixcount != 0:
+		for i in range(0,suffixcount+1):
+			makeifcasingcombos(firstname,lastname,delimeters,domainsuffix,i,includecasing)
 
 def main():
 	parser = argparse.ArgumentParser()
-	parser.add_argument('firstname', help="The first name to use in the gen.")
-	parser.add_argument('lastname', help="The last name to use in the  gen.")
-	parser.add_argument('-I', '--infile',default="", help="[Optional]Space or comma delimited [FirstName][MiddleName][LastName] or [FirstName][LastName]")
-	parser.add_argument('-m', '--middlename', default="", help="[Optional] The middle name to use in the  gen.")
-	parser.add_argument('-d', '--delimeters',default="._-", help="[Optional] Delimeters to use in the gens. Defaults to '._-'")
-	parser.add_argument('-ds', '--domainsuffix',default="", help="[Optional] Domain suffix to append to the end of the gens.")
-	parser.add_argument('-i', '--includecasing', action="store_true", help="[Optional] If specified, includes uppercase variants.")
-	parser.add_argument('-sc','--suffixcount', type=int, help="[Optional] If specified will append digits up to and including input.")
-	parser.add_argument('-O', '--outfile', default="", help="[optional] If present, output is written to the specified file otherwise to stdout.")
+	parser.add_argument('-f', '--firstname', default="", help="The first name to use in the combination.")
+	parser.add_argument('-l', '--lastname', default="", help="The last name to use in the  combination.")
+	parser.add_argument('-i', '--infile',default="", help="[Optional]One entry on each line. Space delimited FirstName LastName.")
+	parser.add_argument('-d', '--delimeters',default="._-", help="[Optional] Delimeters to use in the output. Defaults to '._-'")
+	parser.add_argument('-o', '--domainsuffix',default="", help="[Optional] Domain suffix to append to the end of the output.")
+	parser.add_argument('-c', '--includecasing', action="store_true", help="[Optional] If specified, includes uppercase variants.")
+	parser.add_argument('-s','--suffixcount', type=int, default=0, help="[Optional] If specified will append incrementing digits up to and including the specified number.")
 	args = parser.parse_args()
 
-	firstName = args.firstname.lower()
-	lastName = args.lastname.lower()
-	middleName = args.middlename
-	if middleName != None:
-		middleName = middleName.lower()
-	domain = args.domainsuffix
-	delimeters = list(args.delimeters)
-	includeCasing = args.includecasing
-	suffixCount = args.suffixcount
-	inFile = args.infile
-	outFile = args.outfile
-	output=[]
-
-	inputNames = []
-
-	if inFile != "":
-		f = open(inFile, "r")
+	if args.infile != "":
+		f = open(args.infile, "r")
 		for line in f:
-			lineStripped = line.replace(","," ")
-			lineStripped = lineStripped.replace("\n","")
-			lineStripped = lineStripped.split(" ")
-			if lineStripped != ['']:
-				inputNames.append(InputName(lineStripped))
+			firstname, lastname = line.split(' ')
+			lastname=lastname.replace("\n","")
+			do(firstname,lastname,args.delimeters,args.domainsuffix,args.suffixcount,args.includecasing)
 	else:
-		inputNames.append(InputName(firstName,middleName,lastName))
-
-	for name in inputNames:
-		output.extend(moosh(name.firstName, name.lastName, name.middleName, delimeters))
-		if includeCasing:
-			output.extend(moosh(name.firstName.capitalize(),name.lastName, name.middleName, delimeters))
-			output.extend(moosh(name.firstName,name.lastName.capitalize(), name.middleName, delimeters))
-			output.extend(moosh(name.firstName,name.lastName, name.middleName.capitalize(), delimeters))
-			output.extend(moosh(name.firstName.capitalize(),name.lastName.capitalize(), name.middleName, delimeters))
-			output.extend(moosh(name.firstName.capitalize(),name.lastName, name.middleName.capitalize(), delimeters))
-			output.extend(moosh(name.firstName,name.lastName.capitalize(), name.middleName.capitalize(), delimeters))
-			output.extend(moosh(name.firstName.capitalize(),name.lastName.capitalize(), name.middleName.capitalize(), delimeters))
-
-		suffixAdditions = []
-		if suffixCount != None:
-			for i in range(len(output)):
-					for j in range(suffixCount+1):
-						suffixAdditions.append(f'{output[i]}{j}')
-			output.extend(suffixAdditions)
-
-		if domain != "":
-			for i in range(len(output)):
-					output[i] = f'{output[i]}@{domain}'
-
-	#There are a few dupes due to calling moosh with capitlised middlename and moosh adding first+last. Dedupe here.
-	output = list(set(output))
-
-	for i in range(len(output)):
-		if outFile != "":
-			with open(outFile,'a') as f:
-				f.write(output[i])
-				f.write("\n")
-		else:
-			print(output[i])
-
+		do(args.firstname,args.lastname,args.delimeters,args.domainsuffix,args.suffixcount,args.includecasing)
 if __name__ == "__main__":
     main()
